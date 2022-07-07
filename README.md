@@ -1,16 +1,18 @@
-# front-clients
+# Front-Clients Qualicorp
 
-This template should help get you started developing with Vue 3 in Vite.
+## Description
 
-## Recommended IDE Setup
+This project is a front-end web application to manage events like Create, Read, Update and Delete of the entitie Clients.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## Tecnologies
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+To create the whole project I use [VueJS](https://vuejs.org/)
+To Help with the build of components I use the CSS framework [Tailwind CSS](https://tailwindcss.com/)
+For consuming api data I use the lib of [Axios](https://axios-http.com/ptbr/docs/intro)
 
 ## Project Setup
+
+To run the project you need to install [NodeJS](https://nodejs.dev/download/)
 
 ```sh
 npm install
@@ -33,4 +35,3 @@ npm run build
 ```sh
 npm run lint
 ```
-# front-clients-qualicorp
