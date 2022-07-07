@@ -5,11 +5,11 @@ This project is a front-end web application to manage events like Create, Read, 
 
 ## Tecnologies
 
- - To create the whole project I used [VueJS](https://vuejs.org/)
+ - To create the whole project I used [NodeJS](https://nodejs.org/en/) and [VueJS](https://vuejs.org/)
  - To Help with the build of components I used the CSS framework [Tailwind CSS](https://tailwindcss.com/)
  - For consuming api data I used the lib of [Axios](https://axios-http.com/ptbr/docs/intro)
 
-## URL Production Build
+## URL Production
 
 To make a deploy of the project I used the platform of [Vercel](https://vercel.com/). You can acess the project [here](https://front-clients-qualicorp.vercel.app/)
 
