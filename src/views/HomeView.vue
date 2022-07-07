@@ -6,6 +6,8 @@ import HeaderApp from "../components/HeaderApp.vue";
 <template>
   <HeaderApp title="CRUD CLIENTES" />
   <main>
-    <RouterLink to="/clients"><button>Fodase</button></RouterLink>
+    <RouterLink to="/clients"
+      ><button>Entrar no CRUD de clientes</button></RouterLink
+    >
   </main>
 </template>
