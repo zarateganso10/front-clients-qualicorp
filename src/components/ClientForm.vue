@@ -9,9 +9,13 @@ import {
 } from "../services/client.js";
 
 const VALIDATION_SCHEMA = object().shape({
-  email: string().required("Campo E-mail é um campo obrigatório").email(),
-  cpf: string().min(14, "").required("Campo CPF é obrigatório"),
-  name: string().required("Campo nome é obrigatório"),
+  email: string()
+    .required("Campo E-mail é um campo obrigatório")
+    .email("Campo E-mail deve ser um do tipo email"),
+  cpf: string()
+    .min(14, "Campo CPF tem que ter 11 numeros")
+    .required("Campo CPF é obrigatório"),
+  name: string().required("Campo Nome é obrigatório"),
   phone: string(),
 });
 
@@ -50,13 +54,21 @@ async function validate(field) {
     await VALIDATION_SCHEMA.validateAt(field, formValues.value);
     errors.value[field] = false;
   } catch (error) {
-    errors.value[field] = true;
+    console.log(error.message);
+    errors.value[field] = error.message;
   }
 }
 
 async function handleCreateClient() {
-  await createClient(formValues.value);
-  router.push("/clients");
+  try {
+    await VALIDATION_SCHEMA.validate(formValues.value, { abortEarly: false });
+    await createClient(formValues.value);
+    router.push("/clients");
+  } catch (err) {
+    err.inner.forEach((error) => {
+      errors.value[error.path] = error.message;
+    });
+  }
 }
 
 async function handleEditClient() {
@@ -82,59 +94,103 @@ onMounted(async () => {
 <template>
   <form @submit.prevent="handleSubmit">
     <div class="flex flex-col">
-      <div class="flex gap-2 justify-center items-center mb-4 mt-8">
-        <label class="w-20">Nome:</label>
-        <input
+      <div class="mb-4 mt-8">
+        <p
           :class="[
-            { 'border-2 border-[#f20c0c]': errors.name && formValues.name },
-            'w-full border border-solid rounded-xl py-2 px-2 focus:outline-none focus:border-[#0d1321]',
+            { invisible: !errors.name },
+            'text-center text-sm text-[#f20c0c]',
           ]"
-          type="text"
-          placeholder="Escreve seu nome"
-          v-model="formValues.name"
-          @blur="validate('name')"
-        />
+        >
+          {{ errors.name }}
+        </p>
+        <div class="flex gap-2 justify-center items-center">
+          <label class="w-20">Nome:</label>
+          <input
+            :class="[
+              { 'border-2 border-[#f20c0c]': errors.name && formValues.name },
+              'w-full border border-solid rounded-xl py-2 px-2 focus:outline-none focus:border-[#0d1321]',
+            ]"
+            type="text"
+            placeholder="Escreve seu nome"
+            v-model="formValues.name"
+            @blur="validate('name')"
+          />
+        </div>
       </div>
-      <div class="flex gap-2 justify-center items-center mb-4">
-        <label class="w-20">E-mail:</label>
-        <input
+      <div>
+        <p
           :class="[
-            { 'border-2 border-[#f20c0c]': errors.email && formValues.email },
-            'w-full border border-solid rounded-xl py-2 px-2 focus:outline-none focus:border-[#0d1321]',
+            { invisible: !errors.email },
+            'text-center text-sm text-[#f20c0c]',
           ]"
-          type="email"
-          placeholder="Escreve seu E-mail"
-          v-model="formValues.email"
-          @blur="validate('email')"
-        />
+        >
+          {{ errors.email }}
+        </p>
+        <div>
+          <div class="flex gap-2 justify-center items-center mb-4">
+            <label class="w-20">E-mail:</label>
+            <input
+              :class="[
+                {
+                  'border-2 border-[#f20c0c]': errors.email && formValues.email,
+                },
+                'w-full border border-solid rounded-xl py-2 px-2 focus:outline-none focus:border-[#0d1321]',
+              ]"
+              type="email"
+              placeholder="Escreve seu E-mail"
+              v-model="formValues.email"
+              @blur="validate('email')"
+            />
+          </div>
+        </div>
       </div>
-      <div class="flex gap-2 justify-center items-center mb-4">
-        <label class="w-20">CPF:</label>
-        <input
+      <div>
+        <p
           :class="[
-            { 'border-2 border-[#f20c0c]': errors.cpf && formValues.cpf },
-            'w-full border border-solid rounded-xl py-2 px-2 focus:outline-none focus:border-[#0d1321]',
+            { invisible: !errors.cpf },
+            'text-center text-sm text-[#f20c0c]',
           ]"
-          type="text"
-          v-mask="'###.###.###-##'"
-          placeholder="Escreve seu cpf"
-          v-model="formValues.cpf"
-          @blur="validate('cpf')"
-        />
+        >
+          {{ errors.cpf }}
+        </p>
+        <div class="flex gap-2 justify-center items-center mb-4">
+          <label class="w-20">CPF:</label>
+          <input
+            :class="[
+              { 'border-2 border-[#f20c0c]': errors.cpf && formValues.cpf },
+              'w-full border border-solid rounded-xl py-2 px-2 focus:outline-none focus:border-[#0d1321]',
+            ]"
+            type="text"
+            v-mask="'###.###.###-##'"
+            placeholder="Escreve seu cpf"
+            v-model="formValues.cpf"
+            @blur="validate('cpf')"
+          />
+        </div>
       </div>
-      <div class="flex gap-2 justify-center items-center">
-        <label class="w-20">Telefone:</label>
-        <input
+      <div>
+        <p
           :class="[
-            { 'border-2 border-[#f20c0c]': errors.phone && formValues.phone },
-            'w-full border border-solid rounded-xl py-2 px-2 focus:outline-none focus:border-[#0d1321]',
+            { invisible: !errors.phone },
+            'text-center text-sm text-[#f20c0c]',
           ]"
-          type="text"
-          v-mask="['(##) ####-####', '(##) #####-####']"
-          placeholder="Escreve seu telefone"
-          v-model="formValues.phone"
-          @blur="validate('phone')"
-        />
+        >
+          {{ errors.phone }}
+        </p>
+        <div class="flex gap-2 justify-center items-center">
+          <label class="w-20">Telefone:</label>
+          <input
+            :class="[
+              { 'border-2 border-[#f20c0c]': errors.phone && formValues.phone },
+              'w-full border border-solid rounded-xl py-2 px-2 focus:outline-none focus:border-[#0d1321]',
+            ]"
+            type="text"
+            v-mask="['(##) ####-####', '(##) #####-####']"
+            placeholder="Escreve seu telefone"
+            v-model="formValues.phone"
+            @blur="validate('phone')"
+          />
+        </div>
       </div>
       <button
         class="w-full h-10 bg-blue-500 rounded-xl mt-10 uppercase text-white hover:bg-blue-800 transition"

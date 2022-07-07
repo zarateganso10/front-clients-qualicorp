@@ -14,7 +14,7 @@ const { id } = route.params;
       <div class="md:w-[60%] flex justify-start items-center mt-12">
         <h2 class="text-3xl font-bold">Edição de cliente</h2>
       </div>
-      <div class="mt-8 bg-gray-200 w-[700px] h-[500px] border rounded p-14">
+      <div class="mt-8 bg-gray-200 w-[700px] h-[600px] border rounded p-14">
         <h3 class="text-2xl font-bold text-center">
           Formulário de edição do cliente
         </h3>

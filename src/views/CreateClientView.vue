@@ -10,7 +10,7 @@ import ClientForm from "../components/ClientForm.vue";
       <div class="md:w-[60%] flex justify-start items-center mt-12">
         <span class="text-3xl font-bold">Criar novo cliente</span>
       </div>
-      <div class="mt-8 bg-gray-200 w-[700px] h-[500px] border rounded p-14">
+      <div class="mt-8 bg-gray-200 w-[700px] h-[600px] border rounded p-14">
         <h3 class="text-2xl font-bold text-center">Formulário novo cliente</h3>
         <ClientForm formType="create" />
       </div>
