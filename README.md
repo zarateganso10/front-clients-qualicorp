@@ -11,7 +11,7 @@ This project is a front-end web application to manage events like Create, Read, 
 
 ## URL Production Build
 
-To make a deploy of the project I used the platform o [Vercel](https://vercel.com/). You can acess the project [here](https://front-clients-qualicorp.vercel.app/)
+To make a deploy of the project I used the platform of [Vercel](https://vercel.com/). You can acess the project [here](https://front-clients-qualicorp.vercel.app/)
 
 ## Project Setup
 
