@@ -3,19 +3,20 @@ import { onMounted, ref } from "vue";
 import "vue-loading-overlay/dist/vue-loading.css";
 import IconEdit from "../components/icons/IconEdit.vue";
 import IconTrash from "../components/icons/IconTrash.vue";
-import { instanceAxios } from "../api/axios.js";
 import { RouterLink, useRouter } from "vue-router";
+import { getAllClients, removeClientById } from "../services/client.js";
 
 const router = useRouter();
 const clients = ref([]);
 
-async function fetchClients() {
-  const response = await instanceAxios.get("/clients");
-  return response.data;
-}
-
 onMounted(async () => {
-  clients.value = await fetchClients();
+  try {
+    clients.value = await getAllClients();
+  } catch (error) {
+    alert(
+      "Não foi possivel buscar todos os clientes, tente novamente mais tarde"
+    );
+  }
 });
 
 function handleClick(id) {
@@ -24,10 +25,10 @@ function handleClick(id) {
 
 async function handleDeleteClient(id) {
   try {
-    await instanceAxios.delete(`/clients/${id}`);
+    await removeClientById(id);
     clients.value = clients.value.filter((client) => client.id !== id);
   } catch (error) {
-    alert("Não conseguiu deletar");
+    alert("Não foi possível remover o cliente, tente novamente mais tarde");
   }
 }
 </script>

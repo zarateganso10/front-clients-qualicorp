@@ -1,8 +1,12 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { instanceAxios } from "../api/axios.js";
 import { useRouter } from "vue-router";
 import { object, string } from "yup";
+import {
+  getClientById,
+  updateClientById,
+  createClient,
+} from "../services/client.js";
 
 const VALIDATION_SCHEMA = object().shape({
   email: string().required("Campo E-mail é um campo obrigatório").email(),
@@ -21,6 +25,10 @@ const props = defineProps({
 
 const handleSubmit = computed(() =>
   props.formType === "create" ? handleCreateClient : handleEditClient
+);
+
+const buttonSubmitText = computed(() =>
+  props.formType === "create" ? "Criar cliente" : "Editar cliente"
 );
 
 const router = useRouter();
@@ -47,23 +55,26 @@ async function validate(field) {
 }
 
 async function handleCreateClient() {
-  await instanceAxios.post("/clients", formValues.value);
+  await createClient(formValues.value);
   router.push("/clients");
 }
 
 async function handleEditClient() {
-  await instanceAxios.put(`/clients/${props.client.id}`, formValues.value);
-  router.push("/clients");
-}
-async function fetchClient() {
-  const response = await instanceAxios.get(`/clients/${props.clientId}`);
-  formValues.value = response.data;
+  try {
+    await updateClientById(props.clientId, formValues.value);
+    router.push("/clients");
+  } catch (error) {
+    alert("Não foi possível atualizar o cliente, tente novamente mais tarde");
+  }
 }
 
 onMounted(async () => {
   if (props.clientId) {
-    console.log("entrou");
-    await fetchClient();
+    try {
+      formValues.value = await getClientById(props.clientId);
+    } catch (error) {
+      alert("Não foi possível buscar o cliente, tente novamente mais tarde");
+    }
   }
 });
 </script>
@@ -129,7 +140,7 @@ onMounted(async () => {
         class="w-full h-10 bg-blue-500 rounded-xl mt-10 uppercase text-white hover:bg-blue-800 transition"
         type="submit"
       >
-        Criar Cliente
+        {{ buttonSubmitText }}
       </button>
     </div>
   </form>
